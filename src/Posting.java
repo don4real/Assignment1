@@ -29,4 +29,12 @@ public class Posting implements Comparable<Integer>{
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "DocID: " + this.docID + " - Feq: " + this.frequency;
+	}
+	
+	
 }

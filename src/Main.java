@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Main {
@@ -6,7 +7,9 @@ public class Main {
 		// TODO Auto-generated method stub
 		ArrayList<String> documentNames = DocumentCollector.getDocNames();
 		//DocumentCollector.getDocNames();
-		//Tokenizer.readDocuments(documentNames);
+		Tokenizer tokenizer = new Tokenizer();
+		tokenizer.readDocuments(documentNames);
+		
 		
 		//Search word, document etc
 		//HashMap<String, List<Posting>> invertedIndex = new HashMap<String, List<Postring>>();
