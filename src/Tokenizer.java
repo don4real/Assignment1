@@ -1,32 +1,27 @@
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 import java.util.Scanner;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 
 public class Tokenizer {
 	private HashMap<String, ArrayList<Posting>> index;
 	private int docID;
+	
 	public void readDocuments(String[] documents) throws IOException {
 		// TODO Auto-generated method stub
 		index = new HashMap<String, ArrayList<Posting>>();
-		FileReader fr = new FileReader("FileReaderDemo.java"); 
-		Scanner scanner = new Scanner(fr);
-		scanner.useDelimiter("[^a-zA-Z0-9.\\-\']+");
+		FileReader fr; 
+		Scanner scanner;		
 		String token;
 		ArrayList<Posting> postings = new ArrayList<Posting>();
 		int frequencyOfPost;
 		docID = 0;
-		for(String s : documents){
-			
+		for(String documentName : documents){
+			fr = new FileReader(documentName); 
+			scanner = new Scanner(fr);
+			scanner.useDelimiter("[^a-zA-Z0-9.\\-\']+");
 			while(scanner.hasNext()) { 
 				token = scanner.next();
 				token = tokenize(token);			
@@ -49,9 +44,10 @@ public class Tokenizer {
 				index.put(token, postings);
 			}
 			docID++;
+			scanner.close();
+			fr.close();
 		}
-		scanner.close();
-		fr.close();
+		
 	}
 
 	private static String tokenize(String s) {
