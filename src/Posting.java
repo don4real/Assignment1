@@ -1,5 +1,5 @@
 
-public class Posting {
+public class Posting implements Comparable<Integer>{
 	private int docID;
 	private int frequency;
 	
@@ -22,5 +22,11 @@ public class Posting {
 
 	public void setFrequency(int frequency) {
 		this.frequency = frequency;
+	}
+
+	@Override
+	public int compareTo(Integer o) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }
