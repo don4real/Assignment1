@@ -15,48 +15,60 @@ public class Tokenizer {
 		FileReader fr; 
 		Scanner scanner;		
 		String token;
-		ArrayList<Posting> postings = new ArrayList<Posting>();
+		ArrayList<Posting> postings;
 		int frequencyOfPost;
 		docID = 0;
 		
 		try {
-			for(String documentName : documentNames){
+			for(int i=0;i<documentNames.size();i++){
 
-				fr = new FileReader(DocumentCollector.getDocumentPath() + documentName);
+				fr = new FileReader(DocumentCollector.getDocumentPath() + documentNames.get(i));
+				System.out.println("DocName: " + documentNames.get(i));
 				scanner = new Scanner(fr);
 				scanner.useDelimiter("[^a-zA-Z0-9.\\-\']+");
 				while(scanner.hasNext()) { 
-					token = scanner.next();
-					token = tokenize(token);			
+					token = scanner.next().toLowerCase();
+					token = tokenize(token);
+					//System.out.println("Token: " + token);
 					//Check if the word already exists and increment frequency of the document
 					//then replace the value with the new value
-					if(index.containsKey(token)){
+					/*if(index.containsKey(token)){
+					//System.out.println("Yes");
 						postings = index.get(token);
-						for	(int i = 0; i<postings.size();i++){
-							Posting posting = postings.get(i);
-							if (posting.getDocID() == docID){
+						
+						for	(int j = 0;j<postings.size();j++){
+							Posting posting = postings.get(j);
+							if (posting.getDocID() == i){
 								frequencyOfPost = posting.getFrequency();
-								postings.remove(posting);
+								postings.remove(j);
 								posting.setFrequency(frequencyOfPost + 1);
+								posting.setDocID(i);
 								postings.add(posting);
 							}
+							
 						}
-						index.replace(token, postings);
-					}
-					postings.add(new Posting(docID, 1));
+						index.put(token, postings);
+					}*/
+					postings = new ArrayList<Posting>();
+					postings.add(new Posting(i,1));
+					
+					//System.out.println("Token: " + token + " Postings: " +postings);
 					index.put(token, postings);
 				}
-				docID++;
+				
 				scanner.close();
 				fr.close();
+				System.out.println(index);
 
 			}
+			docID++;
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		System.out.println(index.toString());
+		System.out.println(index);
 
 	}
 
@@ -72,4 +84,5 @@ public class Tokenizer {
 		
 		return s;
 	} 
-}
+} 
+
