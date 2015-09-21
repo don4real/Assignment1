@@ -3,30 +3,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.TreeMap;
 
 
-public class Tokenizer {
+public class Tokenizer2 {
 	
-	
-	//The total is document two, so check the total
-	//And store docIDs differently
-	
-	private TreeMap<String, HashMap<Integer, Integer>> index;
-	/*
-	 //				"Token"			" DocID"				"DocID"   "FEQ"
-	private HashMap<String,  HashMap<Integer, Integer>> index;
-	 */
+	private HashMap<String, HashMap<Integer, Integer>> index;
 	private int docID;
 	private int freq;
 	
 	public void readDocuments(ArrayList<String> documentNames){
 		// TODO Auto-generated method stub
 		
-		index = new TreeMap<String, HashMap<Integer, Integer>>();
+		index = new HashMap<String, HashMap<Integer, Integer>>();
 		FileReader fr; 
 		Scanner scanner;		
 		String token;
+			
 		HashMap<Integer, Integer> postings;
 		int frequencyOfPost;
 		//docID = 0;
@@ -60,6 +52,7 @@ public class Tokenizer {
 						}else{
 							posting.put(docID, frequency);
 						}
+						
 						postings.put(docID, frequency);
 						
 					}
