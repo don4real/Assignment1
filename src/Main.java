@@ -24,6 +24,9 @@ public class Main {
 		System.out.println(fr2.getTokensDocIDs());
 		System.out.println(fr2.getTokensFrequency());
 		
+	
+
+		SearchQuery sq = new SearchQuery("a cat", fr2);
 		//System.out.println(fullPath+documentNames.get(0));
 		
 		//DocumentCollector.getDocNames();
