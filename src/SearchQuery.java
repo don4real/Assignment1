@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import tf.idf.Document;
 import tf.idf.Term;
 
 
@@ -32,8 +34,47 @@ public class SearchQuery {
 				//Query
 				term.getQuery().setDf(df);
 				term.getQuery().setIdf(fr2.getNumberOfDocuments(), df); //N=Total Docs //log N/df
-				//Doc
-				term.getDocument().setTf();
+				
+				//Get the documentIDs to look into
+				ArrayList<Integer> documentIDs = tokens.get(terms[currentTerm]);
+				
+				//Loop to go through the documents that the term exists in
+				for(int documentNumber = 0; documentNumber<documentIDs.size(); documentNumber++)
+				{
+					//Create a new document with an ID
+					Document document = new Document();
+					document.setDocID(documentIDs.get(documentNumber));
+					
+					//Get frequencies of current word from current document
+					int frequency = fr2.getAllDocuments().get(documentIDs.get(documentNumber)).get(terms[currentTerm]);
+					
+					/*if(term.getDocument()!=null)
+					{
+						
+						term.getDocument().setTf();
+					}
+					
+					else
+					{*/
+						
+					//ArrayList<Integer> newArray = new ArrayList<Integer>();
+					ArrayList<Document> newArray = new ArrayList<Document>();
+					//newArray.add(documentIDs.get(documentNumber));
+					newArray.add(document);
+					term.setDocument(newArray);
+					//Set TF for Document
+					term.getDocument().get(documentNumber).setTf(frequency);
+					
+					
+				}
+				
+				//term and documents its in
+				
+				
+				//All documents with words and frequencies
+				
+				
+				//term.getDocument().setTf();
 				
 				termMap.put(terms[currentTerm], term);
 			}
@@ -43,7 +84,7 @@ public class SearchQuery {
 				term.getQuery().setDf(0);
 				term.getQuery().setIdf(fr2.getNumberOfDocuments(), 0);
 				//Doc
-				term.getDocument().setTf(fr2.);
+				//term.getDocument().setTf(fr2.);
 				//fr.readFile(documentNames.get(i), path, i);
 				
 				termMap.put(terms[currentTerm], term);
