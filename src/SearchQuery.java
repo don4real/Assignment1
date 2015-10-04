@@ -14,6 +14,7 @@ public class SearchQuery {
 		Map<String, ArrayList<Integer>> tokens = fr2.getTokensDocIDs();
 		Map<Integer, ArrayList<Integer>> documentIDAllFrequencies = new TreeMap<Integer, ArrayList<Integer>>();
 		Map<Integer, Double> documentEuclidean = new TreeMap<Integer, Double>();
+		Map<String, TreeMap<Integer, Double>> termWtd = new TreeMap<String, TreeMap<Integer, Double>>();
 		terms = query.split(" ");
 		for (int i=0;i<terms.length;i++){
 			terms[i] = LinguisticModule.fixToken(terms[i]);
@@ -59,7 +60,7 @@ public class SearchQuery {
 
 						//Get frequencies of current word from current document
 						frequency = fr2.getAllDocuments().get(currentDocID).get(terms[currentTerm]);
-						
+
 						//System.out.println(frequency);
 
 						//Set TF for Document
@@ -112,15 +113,15 @@ public class SearchQuery {
 		System.out.println();
 		System.out.println("FREQUENCIES PER EACH DOCUMENT");
 		System.out.println(documentIDAllFrequencies);
-		
+
 		double formula;
-		
+
 		//Possible problem when there is a document in the beggining/middle without any words in the query - NEEDS A FIX
 		//Loop through all documents
 		for(int i=0; i<documentIDAllFrequencies.size(); i++)
 		{
 			//System.out.println("Euclidean length of Document: " + i);
-			
+
 			double sum = 0;
 
 			//Loop through frequencies array
@@ -129,25 +130,43 @@ public class SearchQuery {
 				double squareRoot = documentIDAllFrequencies.get(i).get(y) * documentIDAllFrequencies.get(i).get(y);
 				sum = sum+squareRoot;
 			}
-						
+
 			formula = Math.sqrt(sum);
 			documentEuclidean.put(i, formula);
-			
+
 		}
-		
+
 		System.out.println("Euclidean lengths of Documents");
 		System.out.println(documentEuclidean);
-		
+
 		System.out.println("W td: " );
 		
+		//Needs work... W td and Product  <---------------
 		
-		for(int y = 0; y<documentEuclidean.size(); y++)
+		/*TreeMap<Integer, Map<String, Integer>> allDocuments = fr2.getAllDocuments();
+
+		//Loop through all of the documents
+		for(int y=0; y<fr2.allDocuments.size(); y++)
 		{
-			
-		}
-		
-		
-		
-		
+			//Loop through the terms in each document
+			for(int z=0; z<allDocuments.get(y).size(); z++)
+			{
+				if(termWtd.get(terms[currentTerm])!=null)
+				{	//Map<String, TreeMap<Integer, Double>> termWtd
+					if(termWtd.get(terms[currentTerm]).get(z))
+					
+				}
+				else
+				{
+					
+				}
+			}
+
+			fr2.getAllDocuments();
+		}*/
+
+
+
+
 	}
 }
