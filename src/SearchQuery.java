@@ -13,6 +13,7 @@ public class SearchQuery {
 		Map<String, Integer> frequencyMap = fr2.getTokensFrequency();
 		Map<String, ArrayList<Integer>> tokens = fr2.getTokensDocIDs();
 		Map<Integer, ArrayList<Integer>> documentIDAllFrequencies = new TreeMap<Integer, ArrayList<Integer>>();
+		Map<Integer, Double> documentEuclidean = new TreeMap<Integer, Double>();
 		terms = query.split(" ");
 		for (int i=0;i<terms.length;i++){
 			terms[i] = LinguisticModule.fixToken(terms[i]);
@@ -111,5 +112,42 @@ public class SearchQuery {
 		System.out.println();
 		System.out.println("FREQUENCIES PER EACH DOCUMENT");
 		System.out.println(documentIDAllFrequencies);
+		
+		double formula;
+		
+		//Possible problem when there is a document in the beggining/middle without any words in the query - NEEDS A FIX
+		//Loop through all documents
+		for(int i=0; i<documentIDAllFrequencies.size(); i++)
+		{
+			//System.out.println("Euclidean length of Document: " + i);
+			
+			double sum = 0;
+
+			//Loop through frequencies array
+			for(int y = 0; y<documentIDAllFrequencies.get(i).size(); y++)
+			{
+				double squareRoot = documentIDAllFrequencies.get(i).get(y) * documentIDAllFrequencies.get(i).get(y);
+				sum = sum+squareRoot;
+			}
+						
+			formula = Math.sqrt(sum);
+			documentEuclidean.put(i, formula);
+			
+		}
+		
+		System.out.println("Euclidean lengths of Documents");
+		System.out.println(documentEuclidean);
+		
+		System.out.println("W td: " );
+		
+		
+		for(int y = 0; y<documentEuclidean.size(); y++)
+		{
+			
+		}
+		
+		
+		
+		
 	}
 }
