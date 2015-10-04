@@ -12,7 +12,7 @@ public class FileReader_VersionTwo
 	static Map<String, ArrayList<Integer>> tokensDocIDs = new TreeMap<String, ArrayList<Integer>>(); //tokens and their docIDs
 	
 	
-	static HashMap<Integer, Map<String, Integer>> allDocuments = new HashMap<Integer, Map<String, Integer>>();
+	static TreeMap<Integer, Map<String, Integer>> allDocuments = new TreeMap<Integer, Map<String, Integer>>();
 	
 	static int docID;
 	static int numberOfDocuments;
@@ -71,7 +71,8 @@ public class FileReader_VersionTwo
 
 	public static void createPosting(ArrayList<String> file)
 	{
-		Map<String, Integer> tokensFrequencyOneDocument  = new HashMap<String, Integer>();
+		Map<String, Integer> tokensFrequencyOneDocument  = new TreeMap<String, Integer>();
+		//Integer frequencyOne = 0;
 		
 		for(int i=0; i<file.size(); i++)
 		{
@@ -96,14 +97,26 @@ public class FileReader_VersionTwo
 			
 			*/	
 
-			if (tokensFrequency.get(currentWord) != null) //if the token exists then increase frequency and perhaps add a new docID
+			if ((tokensFrequency.get(currentWord) != null)) //if the token exists then increase frequency and perhaps add a new docID
 			{
 				Integer frequency = tokensFrequency.get(currentWord);	//EXISTS	//gets empty every time accessed
-				frequency++;					
+				frequency++;			
+				
+				if(tokensFrequencyOneDocument.get(currentWord)!=null)
+				{
+					int freqOne = tokensFrequencyOneDocument.get(currentWord) + 1;
+					tokensFrequencyOneDocument.put(currentWord, freqOne);
+				}
+				
+				else
+				{
+					Integer freqOne = 1;
+					tokensFrequencyOneDocument.put(currentWord, freqOne);
+				}
 				
 				tokensFrequency.put(currentWord, frequency); //update frequency
 				
-				tokensFrequencyOneDocument.put(currentWord, frequency);
+				
 
 				ArrayList<Integer> docIDs = tokensDocIDs.get(currentWord);  //EXISTS
 
@@ -132,7 +145,7 @@ public class FileReader_VersionTwo
 				tokensDocIDs.put(currentWord, docIDs);
 			}
 		}
-		
+		//System.out.println("\n\nPRINTING FREQUENCY: " + docID + ": " + tokensFrequencyOneDocument);
 		allDocuments.put(docID, tokensFrequencyOneDocument);
 
 	}
@@ -170,12 +183,12 @@ public class FileReader_VersionTwo
 		return numberOfDocuments;
 	}
 
-	public static HashMap<Integer, Map<String, Integer>> getAllDocuments() {
+	public static TreeMap<Integer, Map<String, Integer>> getAllDocuments() {
 		return allDocuments;
 	}
 
 	public static void setAllDocuments(
-			HashMap<Integer, Map<String, Integer>> allDocuments) {
+			TreeMap<Integer, Map<String, Integer>> allDocuments) {
 		FileReader_VersionTwo.allDocuments = allDocuments;
 	}
 

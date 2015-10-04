@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import tf.idf.Document;
 import tf.idf.Term;
@@ -11,6 +12,7 @@ public class SearchQuery {
 
 		Map<String, Integer> frequencyMap = fr2.getTokensFrequency();
 		Map<String, ArrayList<Integer>> tokens = fr2.getTokensDocIDs();
+		Map<Integer, ArrayList<Integer>> documentIDAllFrequencies = new TreeMap<Integer, ArrayList<Integer>>();
 		terms = query.split(" ");
 		for (int i=0;i<terms.length;i++){
 			terms[i] = LinguisticModule.fixToken(terms[i]);
@@ -43,26 +45,53 @@ public class SearchQuery {
 				ArrayList<Document> documentIDArray = new ArrayList<Document>();
 				//Loop to go through the documents that the term exists in
 				int frequency = 0;
-				for(int documentNumber = 0; documentNumber<documentIDs.size(); documentNumber++)
+
+				//Making sure there are no duplicate entries - Why look at the same term's documents twice?
+				if(term.getQuery().getTf()<=1)
 				{
-					//Create a new document with an ID
-					Document document = new Document();
-					document.setDocID(documentIDs.get(documentNumber));
+					for(int documentNumber = 0; documentNumber<documentIDs.size(); documentNumber++)
+					{
+						//Create a new document with an ID
+						Document document = new Document();
+						int currentDocID = documentIDs.get(documentNumber);
+						document.setDocID(currentDocID);
 
-					//Get frequencies of current word from current document
-					frequency = fr2.getAllDocuments().get(documentIDs.get(documentNumber)).get(terms[currentTerm]);
-					
-					//Set TF for Document
-					document.setTf(frequency);
+						//Get frequencies of current word from current document
+						frequency = fr2.getAllDocuments().get(currentDocID).get(terms[currentTerm]);
+						
+						//System.out.println(frequency);
 
-					//Add the documents to an array
-					documentIDArray.add(document);
+						//Set TF for Document
+						document.setTf(frequency);
 
+						//Add the documents to an array
+						documentIDArray.add(document);				
+
+
+						if(documentIDAllFrequencies.get(currentDocID)!=null)
+						{
+							//Add another frequency to the documentID
+							documentIDAllFrequencies.get(currentDocID).add(frequency);
+						}
+						else
+						{
+							//Create new Document
+							ArrayList<Integer> freq = new ArrayList<Integer>();
+							freq.add(frequency);
+							documentIDAllFrequencies.put(currentDocID, freq);
+						}
+
+					}
+					/*System.out.println("\n\n" + terms[currentTerm]);
+				for(int i=0; i<documentIDArray.size(); i++)
+				{
+					System.out.print(documentIDArray.get(i));
+				}*/
+
+					//Add array of document IDs to the Term object
+					term.setDocument(documentIDArray);
 				}
 
-				//Add array of document IDs to the Term object
-				term.setDocument(documentIDArray);
-			
 				termMap.put(terms[currentTerm], term);
 			}
 			else
@@ -79,5 +108,8 @@ public class SearchQuery {
 
 		}
 		System.out.println(termMap);
+		System.out.println();
+		System.out.println("FREQUENCIES PER EACH DOCUMENT");
+		System.out.println(documentIDAllFrequencies);
 	}
 }
