@@ -26,7 +26,9 @@ public class Main {
 		
 	
 
-		SearchQuery sq = new SearchQuery("a cat", fr2);
+		//SearchQuery sq = new SearchQuery("a cat", fr2);
+		SearchQuery sq = new SearchQuery("a cat a", fr2);
+		
 		//System.out.println(fullPath+documentNames.get(0));
 		
 		//DocumentCollector.getDocNames();

@@ -43,8 +43,9 @@ public class Term {
 	public String toString() {
 		return "Term [term=" + term + ", "
 				+ "query=TF: " + query.getTf() + "; DF: " + query.getDf() + "; IDF: " + query.getIdf() + "; W: " + query.getWeightq() 
-				+ ", document= " + documents 
+				+ ", document= " + documents.toString() 
 				+ ", product=" + product + "]";
+
 	}
 	
 	

@@ -5,7 +5,7 @@ public class Document {
 	private int df;
 	private int weightq;
 	private int docID;
-	
+
 	public int getTf() {
 		return tf;
 	}
@@ -30,5 +30,10 @@ public class Document {
 	public void setDocID(int docID) {
 		this.docID = docID;
 	}
-	
+
+	@Override
+	public String toString() {
+		return String.valueOf(docID);
+
+	}
 }

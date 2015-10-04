@@ -5,12 +5,10 @@ import java.util.Map;
 import tf.idf.Document;
 import tf.idf.Term;
 
-
-
 public class SearchQuery {
 	String[] terms;
 	public SearchQuery(String query,  FileReader_VersionTwo fr2){
-		
+
 		Map<String, Integer> frequencyMap = fr2.getTokensFrequency();
 		Map<String, ArrayList<Integer>> tokens = fr2.getTokensDocIDs();
 		terms = query.split(" ");
@@ -18,64 +16,53 @@ public class SearchQuery {
 			terms[i] = LinguisticModule.fixToken(terms[i]);
 		}
 		HashMap<String, Term> termMap = new HashMap<String, Term>();
-		for (int currentTerm = 0;currentTerm<terms.length;currentTerm++){
-			
+		for (int currentTerm = 0;currentTerm<terms.length;currentTerm++){			
+
 			Term term = new Term(terms[currentTerm]);
+			//Increase the frequency in the query if the term is already there
 			if(termMap.containsKey(terms[currentTerm])){
 				term = termMap.get(terms[currentTerm]);
 				term.getQuery().setTf(term.getQuery().getTf() + 1);
 				termMap.put(terms[currentTerm], term);
 			}else{
+				//Otherwise set it to 1 
 				term.getQuery().setTf(1);
 			}
 			//get Doc term feq
-			if(tokens.get(terms[currentTerm])!=null){
+			//Get DocumentsIDs from a current  term if it exists in the documents, and if it exists only once in the query
+			if((tokens.get(terms[currentTerm])!=null)){
 				int df = tokens.get(terms[currentTerm]).size();
-				//Query
+				//Query Set the Document Frequency and IDF
 				term.getQuery().setDf(df);
 				term.getQuery().setIdf(fr2.getNumberOfDocuments(), df); //N=Total Docs //log N/df
-				
+
 				//Get the documentIDs to look into
 				ArrayList<Integer> documentIDs = tokens.get(terms[currentTerm]);
-				
+
+				//Create Array of Document Objects
+				ArrayList<Document> documentIDArray = new ArrayList<Document>();
 				//Loop to go through the documents that the term exists in
+				int frequency = 0;
 				for(int documentNumber = 0; documentNumber<documentIDs.size(); documentNumber++)
 				{
 					//Create a new document with an ID
 					Document document = new Document();
 					document.setDocID(documentIDs.get(documentNumber));
-					
+
 					//Get frequencies of current word from current document
-					int frequency = fr2.getAllDocuments().get(documentIDs.get(documentNumber)).get(terms[currentTerm]);
+					frequency = fr2.getAllDocuments().get(documentIDs.get(documentNumber)).get(terms[currentTerm]);
 					
-					/*if(term.getDocument()!=null)
-					{
-						
-						term.getDocument().setTf();
-					}
-					
-					else
-					{*/
-						
-					//ArrayList<Integer> newArray = new ArrayList<Integer>();
-					ArrayList<Document> newArray = new ArrayList<Document>();
-					//newArray.add(documentIDs.get(documentNumber));
-					newArray.add(document);
-					term.setDocument(newArray);
 					//Set TF for Document
-					term.getDocument().get(documentNumber).setTf(frequency);
-					
-					
+					document.setTf(frequency);
+
+					//Add the documents to an array
+					documentIDArray.add(document);
+
 				}
-				
-				//term and documents its in
-				
-				
-				//All documents with words and frequencies
-				
-				
-				//term.getDocument().setTf();
-				
+
+				//Add array of document IDs to the Term object
+				term.setDocument(documentIDArray);
+			
 				termMap.put(terms[currentTerm], term);
 			}
 			else
@@ -86,13 +73,10 @@ public class SearchQuery {
 				//Doc
 				//term.getDocument().setTf(fr2.);
 				//fr.readFile(documentNames.get(i), path, i);
-				
+
 				termMap.put(terms[currentTerm], term);
 			}
-			
-			
-			
-			
+
 		}
 		System.out.println(termMap);
 	}
