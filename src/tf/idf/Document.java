@@ -1,20 +1,12 @@
 package tf.idf;
 
-import java.util.ArrayList;
-
 public class Document {
 	private int tf;
 	private int df;
 	private int weightq;
 	private int docID;
-	private ArrayList<Integer> frequencies;
+	private int frequency;
 
-	public ArrayList<Integer> getFrequencies() {
-		return frequencies;
-	}
-	public void setFrequencies(ArrayList<Integer> frequencies) {
-		this.frequencies = frequencies;
-	}
 	public int getTf() {
 		return tf;
 	}
@@ -39,7 +31,13 @@ public class Document {
 	public void setDocID(int docID) {
 		this.docID = docID;
 	}
-
+	public int getFrequency() {
+		return frequency;
+	}
+	public void setFrequency(int frequency) {
+		this.frequency = frequency;
+	}
+	
 	@Override
 	public String toString() {
 		return String.valueOf(docID);

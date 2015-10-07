@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Term {
 	private String term;
+	private int totalFrequency;
 	private Query query;
 	private ArrayList<Document> documents;
 	private int product;
@@ -26,17 +27,28 @@ public class Term {
 	public void setQuery(Query query) {
 		this.query = query;
 	}
-	public ArrayList<Document> getDocument() {
-		return documents;
-	}
-	public void setDocument(ArrayList<Document> documents) {
-		this.documents = documents;
-	}
+
 	public int getProduct() {
 		return product;
 	}
 	public void setProduct(int product) {
 		this.product = product;
+	}
+	
+	public int getTotalFrequency() {
+		return totalFrequency;
+	}
+
+	public void setTotalFrequency(int totalFrequency) {
+		this.totalFrequency = totalFrequency;
+	}
+
+	public ArrayList<Document> getDocuments() {
+		return documents;
+	}
+
+	public void setDocuments(ArrayList<Document> documents) {
+		this.documents = documents;
 	}
 
 	@Override
