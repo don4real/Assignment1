@@ -1,6 +1,9 @@
 package tf.idf;
 
-public class Query{
+import com.mongodb.BasicDBObject;
+import com.mongodb.ReflectionDBObject;
+
+public class Query extends ReflectionDBObject {
 	private int tf;
 	private int df;
 	private double idf;

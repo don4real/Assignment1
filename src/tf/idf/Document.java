@@ -1,6 +1,9 @@
 package tf.idf;
 
-public class Document {
+import com.mongodb.BasicDBObject;
+import com.mongodb.ReflectionDBObject;
+
+public class Document extends ReflectionDBObject  {
 	private int tf;
 	private int df;
 	private int weightq;

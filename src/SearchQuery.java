@@ -91,7 +91,7 @@ public class SearchQuery {
 				}*/
 
 					//Add array of document IDs to the Term object
-					term.setDocument(documentIDArray);
+					term.setDocuments(documentIDArray);
 				}
 
 				termMap.put(terms[currentTerm], term);

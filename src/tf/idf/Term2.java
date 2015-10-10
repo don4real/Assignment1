@@ -3,19 +3,18 @@ package tf.idf;
 import java.util.ArrayList;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.ReflectionDBObject;
 
-public class Term extends ReflectionDBObject {
+public class Term2 extends BasicDBObject {
 	private String term;
 	private int totalFrequency;
-	//private Query query;
-	//private ArrayList<Document> documents;
+	private Query query;
+	private ArrayList<Document> documents;
 	private int product;
 
 
-	public Term(String term){
-	//	query = new Query();
-		//documents = new ArrayList<Document>();
+	public Term2(String term){
+		query = new Query();
+		documents = new ArrayList<Document>();
 		this.term = term;
 	}
 
@@ -25,12 +24,12 @@ public class Term extends ReflectionDBObject {
 	public void setTerm(String term) {
 		this.term = term;
 	}
-	/*public Query getQuery() {
+	public Query getQuery() {
 		return query;
 	}
 	public void setQuery(Query query) {
 		this.query = query;
-	}*/
+	}
 
 	public int getProduct() {
 		return product;
@@ -47,7 +46,7 @@ public class Term extends ReflectionDBObject {
 		this.totalFrequency = totalFrequency;
 	}
 
-	/*public ArrayList<Document> getDocuments() {
+	public ArrayList<Document> getDocuments() {
 		return documents;
 	}
 
@@ -62,7 +61,7 @@ public class Term extends ReflectionDBObject {
 				+ ", document= " + documents.toString() 
 				+ ", product=" + product + "]";
 
-	}*/
+	}
 
 
 }
