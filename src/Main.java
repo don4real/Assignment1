@@ -28,6 +28,10 @@ public class Main {
 		DBCollection dc = db.getCollection("Term");
 		//UNCOMMENT
 		BasicDBObject dbo = new BasicDBObject();
+		
+		TokenCreator fr2 = new TokenCreator();
+		
+		fr2.tokenize(path, documentNames);
 
 
 		///// UNCOMMENT TO CREATE THE INDEX ONCE
