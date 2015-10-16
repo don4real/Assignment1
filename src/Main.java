@@ -16,7 +16,7 @@ public class Main {
 		ArrayList<String> documentNames = DocumentCollector.getDocNames();
 		String path = DocumentCollector.getDocumentPath();
 
-		Term term = new Term("cat");
+		Term term = new Term("dog");
 		//	term.setTotalFrequency();
 		//	term.setProduct();
 
@@ -36,13 +36,13 @@ public class Main {
 		//////
 
 		////// UNCOMMENT //
-		//	dbo.putAll(term);
-		//	dc.insert(dbo);	
+	//		dbo.putAll(term);
+	//		dc.insert(dbo);	
 		//////
 
 		//REMOVE EVERYTHING
-		//	dc.remove(dbo);
-		//	dc.dropIndex(query);
+	//		dc.remove(dbo);
+	//		dc.dropIndex(query);
 
 		DBCursor cursor = dc.find();
 		try {
@@ -54,13 +54,22 @@ public class Main {
 		}
 
 		//FINDING ONE DOCUMENT
-		BasicDBObject queryy = new BasicDBObject();
+		/*BasicDBObject queryy = new BasicDBObject();
 		queryy.put("Term", "cat");
 
 		DBCursor cur = dc.find(queryy);
 		while(cur.hasNext()) {
 		    System.out.println(cur.next());
-		}
+		}*/
+		
+		//FINDING OUT IF IT EXISTS...
+		/*BasicDBObject queryy = new BasicDBObject();
+		queryy.put("Term", "cat");
+
+		DBCursor cur = dc.find(queryy);
+		if(cur.hasNext()) {
+		    System.out.println(1);
+		}*/
 		 
 
 		//UPDATING A QUERY
@@ -79,21 +88,7 @@ public class Main {
 		frequencyQuery.append("$inc", new BasicDBObject().append("TotalFrequency", 1));
 		dc.update(termQuery, frequencyQuery);*/
 
-
-		//CHECKING IF DOCUMENT IT EXISTS - not working
-		//DBObject query = new BasicDBObject("Term.dog", new BasicDBObject("$exists", true));
 		
-		/*BasicDBObject termQuery = new BasicDBObject();		
-		termQuery.put("Term", "cat");			
-		System.out.println(termQuery);
-		String termik = "\"Term\" : \"cat\"";
-	    DBObject query = new BasicDBObject(termik, new BasicDBObject("$exists", true));
-	    System.out.println(query);
-	    
-	    
-		DBCursor result = dc.find(query);
-		System.out.println(result.size());*/
-
 		//FileReader_VersionTwo fr2 = new FileReader_VersionTwo();
 
 		//fr2.tokenize(path, documentNames);
