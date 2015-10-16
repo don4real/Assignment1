@@ -91,7 +91,15 @@ public class TokenCreator
 			if ((tokensFrequency.get(currentWord) != null)) //if the token exists then increase frequency and perhaps add a new docID
 			{
 				Integer frequency = tokensFrequency.get(currentWord);	//EXISTS	//gets empty every time accessed
-				frequency++;			
+				frequency++;		
+				
+				//DB
+				BasicDBObject termQuery = new BasicDBObject();		
+				termQuery.put("Term", currentWord);		
+				BasicDBObject frequencyQuery = new BasicDBObject();
+				frequencyQuery.append("$inc", new BasicDBObject().append("TotalFrequency", 1));
+				dc.update(termQuery, frequencyQuery);
+				//
 				
 				if(tokensFrequencyOneDocument.get(currentWord)!=null)
 				{
@@ -137,13 +145,15 @@ public class TokenCreator
 				
 				//DB
 				Term term = new Term(currentWord);				
+				//
 				
 				Integer frequency = 1;
 				tokensFrequency.put(currentWord, frequency); 
 				tokensFrequencyOneDocument.put(currentWord, frequency);
 				//DB
 				term.setTotalFrequency(frequency);
-
+				//
+				
 				ArrayList<Integer> docIDs = new ArrayList<Integer>();	
 				docIDs.add(docID);
 				tokensDocIDs.put(currentWord, docIDs);
@@ -157,6 +167,7 @@ public class TokenCreator
 				
 				dbo.putAll(term);
 				dc.insert(dbo);	
+				//
 			}
 		}
 		//System.out.println("\n\nPRINTING FREQUENCY: " + docID + ": " + tokensFrequencyOneDocument);
