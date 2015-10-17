@@ -28,10 +28,10 @@ public class Main {
 		DBCollection dc = db.getCollection("Term");
 		//UNCOMMENT
 		BasicDBObject dbo = new BasicDBObject();
+		////<--	
+//<--	TokenCreator fr2 = new TokenCreator();
 		
-		TokenCreator fr2 = new TokenCreator();
-		
-		fr2.tokenize(path, documentNames);
+//<--	fr2.tokenize(path, documentNames);
 
 
 		///// UNCOMMENT TO CREATE THE INDEX ONCE
@@ -45,7 +45,7 @@ public class Main {
 		//////
 
 		//REMOVE EVERYTHING
-	//		dc.remove(dbo);
+		//<--			dc.remove(dbo);
 	//		dc.dropIndex(query);
 
 		DBCursor cursor = dc.find();

@@ -163,6 +163,7 @@ public class TokenCreator
 				Document document = new Document();
 				document.setDocID(docID);
 				documentsIDs.add(document);
+				document.setDf(frequency);
 				term.setDocuments(documentsIDs);
 				
 				dbo.putAll(term);

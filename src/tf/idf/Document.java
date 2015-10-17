@@ -8,7 +8,7 @@ public class Document extends ReflectionDBObject  {
 	private int df;
 	private int weightq;
 	private int docID;
-	private int frequency;
+	//private int frequency;
 
 	public int getTf() {
 		return tf;
@@ -34,12 +34,12 @@ public class Document extends ReflectionDBObject  {
 	public void setDocID(int docID) {
 		this.docID = docID;
 	}
-	public int getFrequency() {
+	/*public int getFrequency() {
 		return frequency;
 	}
 	public void setFrequency(int frequency) {
 		this.frequency = frequency;
-	}
+	}*/
 	
 	@Override
 	public String toString() {
