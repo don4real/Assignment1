@@ -55,12 +55,18 @@ public class Term extends ReflectionDBObject {
 		this.documents = documents;
 	}
 
-	@Override
+	/*@Override
 	public String toString() {
 		return "Term [term=" + term + ", "
 				+ "query=TF: " + query.getTf() + "; DF: " + query.getDf() + "; IDF: " + query.getIdf() + "; W: " + query.getWeightq() 
 				+ ", document= " + documents.toString() 
 				+ ", product=" + product + "]";
+
+	}*/
+	
+	@Override
+	public String toString() {	
+		return "Term [term=" + term + ", TotalFrequency " + totalFrequency + ", Documents " + documents +"]\n\n";
 
 	}
 

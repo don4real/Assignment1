@@ -7,6 +7,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.sun.org.apache.bcel.internal.generic.DCONST;
 import mongodb.MongoDb;
+import tf.idf.Document;
 import tf.idf.Term;
 
 public class Main {
@@ -29,9 +30,9 @@ public class Main {
 		//UNCOMMENT
 		BasicDBObject dbo = new BasicDBObject();
 		////<--	
-//<--	TokenCreator fr2 = new TokenCreator();
+			TokenCreator fr2 = new TokenCreator();
 		
-//<--	fr2.tokenize(path, documentNames);
+			fr2.tokenize(path, documentNames);
 
 
 		///// UNCOMMENT TO CREATE THE INDEX ONCE
@@ -45,17 +46,60 @@ public class Main {
 		//////
 
 		//REMOVE EVERYTHING
-		//<--			dc.remove(dbo);
+//		dc.remove(dbo);
 	//		dc.dropIndex(query);
 
-		DBCursor cursor = dc.find();
+		
+		//UNCOMMENT
+		/*DBCursor cursor = dc.find();
 		try {
 			while(cursor.hasNext()) {
 				System.out.println(cursor.next());
 			}
 		} finally {
 			cursor.close();
-		}
+		}*/
+		
+		//FOLLOWING WORKS
+		/*BasicDBObject queryy = new BasicDBObject("Term", "hand");
+		queryy.put("Term", "me");
+				
+		BasicDBObject docToInsert = new BasicDBObject("DocID", "4");
+		docToInsert.put("Tf", 2);
+		
+		BasicDBObject updateCommand = new BasicDBObject("$push", new BasicDBObject("Documents", docToInsert));
+		dc.update(queryy, updateCommand);
+		
+		DBCursor cur = dc.find(queryy);
+		while(cur.hasNext()) {
+		 System.out.println(cur.next());
+		}*/
+		
+		
+		/*BasicDBObject queryy = new BasicDBObject("Term", "hand");
+		queryy.put("Term", "me");
+				
+		Document document = new Document();
+		document.setDocID(77);
+		document.setTf(5);
+		BasicDBObject docToInsert = new BasicDBObject();
+		//docToInsert.putAll();String.valueOf(document.getDocID()), document);
+		docToInsert.putAll(document);
+		
+		//BasicDBObject updateCommand = new BasicDBObject("$set", new BasicDBObject("Documents", docToInsert));
+		//BasicDBObject updateCommand = new BasicDBObject("$set", new BasicDBObject("Documents", new BasicDBObject(String.valueOf(document.getDocID()), document)));
+		//BasicDBObject updateCommand = new BasicDBObject("$set", new BasicDBObject("Documents.DocID", 6));
+
+		
+		//BasicDBObject updateCommand = new BasicDBObject("$push", new BasicDBObject("Documents", docToInsert));
+		//
+		//dc.update(queryy, updateCommand);
+		
+		DBCursor cur = dc.find(queryy);
+		while(cur.hasNext()) {
+		 System.out.println(cur.next());
+		}*/
+		
 
 		//FINDING ONE DOCUMENT
 		/*BasicDBObject queryy = new BasicDBObject();

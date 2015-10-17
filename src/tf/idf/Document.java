@@ -5,7 +5,7 @@ import com.mongodb.ReflectionDBObject;
 
 public class Document extends ReflectionDBObject  {
 	private int tf;
-	private int df;
+	private int wf;
 	private int weightq;
 	private int docID;
 	//private int frequency;
@@ -16,11 +16,11 @@ public class Document extends ReflectionDBObject  {
 	public void setTf(int tf) {
 		this.tf = tf;
 	}
-	public int getDf() {
-		return df;
+	public int getWf() {
+		return wf;
 	}
-	public void setDf(int df) {
-		this.df = df;
+	public void setWf(int wf) {
+		this.wf = wf;
 	}
 	public int getWeightq() {
 		return weightq;
@@ -43,7 +43,7 @@ public class Document extends ReflectionDBObject  {
 	
 	@Override
 	public String toString() {
-		return String.valueOf(docID);
+		return "DocIDs: "  + String.valueOf(docID) + " Fq: " + String.valueOf(tf) + "||";
 
 	}
 }

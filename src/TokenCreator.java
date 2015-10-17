@@ -24,6 +24,9 @@ public class TokenCreator
 	
 	static TreeMap<Integer, Map<String, Integer>> allDocuments = new TreeMap<Integer, Map<String, Integer>>();
 	
+	//EVERYTHING THAT WILL BE PUT IN MONGODB LATER
+	static TreeMap<String, Term> allTerms = new TreeMap<String, Term>();
+	
 	static MongoDb mongodb = new MongoDb();
 	static DB db = mongodb.getDb();
 	static DBCollection dc = db.getCollection("Term");
@@ -48,6 +51,8 @@ public class TokenCreator
 			readFile(fullPath);				
 		}
 	}
+	
+	
 	public static void readFile(String fullPath)
 	{
 		ArrayList<String> file = new ArrayList<String>();		
@@ -88,20 +93,84 @@ public class TokenCreator
 		{
 			String currentWord = LinguisticModule.fixToken(file.get(i));			
 			
-			if ((tokensFrequency.get(currentWord) != null)) //if the token exists then increase frequency and perhaps add a new docID
+			if ((allTerms.get(currentWord) != null)) //if the token exists then increase frequency and perhaps add a new docID
 			{
-				Integer frequency = tokensFrequency.get(currentWord);	//EXISTS	//gets empty every time accessed
-				frequency++;		
+	//			Integer frequency = tokensFrequency.get(currentWord);	//EXISTS	//gets empty every time accessed
+	//			frequency++;	
+				
+				//INCREASE THE TOTAL FREQUENCY
+				Term term = allTerms.get(currentWord);
+				Integer frequency = term.getTotalFrequency();
+				frequency++;
+				term.setTotalFrequency(frequency);
+				
+				//TAKE CARE OF THE DOCUMENT FREQUENCY ETC
+				ArrayList<Document> documents = term.getDocuments();
+				
+				boolean addNewOne = true;
+				
+				for(int y=0; y<documents.size(); y++)
+				{
+					Document document = documents.get(y);
+					
+					//Check if the arraylist contains docID
+					if(document.getDocID()==docID)
+					{
+						int freq = document.getTf();
+						freq++;
+						document.setTf(freq);
+						
+						addNewOne = false;
+						
+						documents.set(y, document);
+					}			
+					
+				}
+				
+				if(addNewOne==true)
+				{
+					Document document = new Document();
+					document.setDocID(docID);
+					document.setTf(1);
+					
+					documents.add(document);
+				}
+				
+				term.setDocuments(documents);
+				
+				
+				
 				
 				//DB
-				BasicDBObject termQuery = new BasicDBObject();		
-				termQuery.put("Term", currentWord);		
-				BasicDBObject frequencyQuery = new BasicDBObject();
-				frequencyQuery.append("$inc", new BasicDBObject().append("TotalFrequency", 1));
-				dc.update(termQuery, frequencyQuery);
-				//
+			//	BasicDBObject termQuery = new BasicDBObject();		
+			//	termQuery.put("Term", currentWord);		
+			//	BasicDBObject frequencyQuery = new BasicDBObject();
+			//	frequencyQuery.append("$inc", new BasicDBObject().append("TotalFrequency", 1));
+			//	dc.update(termQuery, frequencyQuery);
 				
-				if(tokensFrequencyOneDocument.get(currentWord)!=null)
+				
+				/*
+				//FINDING THE DOCUMENT
+				BasicDBObject queryy = new BasicDBObject();
+				queryy.put("Term", currentWord);
+
+				DBCursor cur = dc.find(queryy);
+				while(cur.hasNext()) {
+				 System.out.println(cur.next());
+				
+				
+				//get document with current ID or create new one
+				BasicDBObject documentQuery = new BasicDBObject();
+				documentQuery.put("DocID", docID);	
+				//documentQuery.append("$inc", new BasicDBObject().append("Tf", 1));	
+				
+				//documentQuery.append("$inc", new BasicDBObject().append("Documents.Tf", 1));
+				dc.update(termQuery, documentQuery);
+				//
+				*/
+				
+				
+			/*	if(tokensFrequencyOneDocument.get(currentWord)!=null)
 				{
 					int freqOne = tokensFrequencyOneDocument.get(currentWord) + 1;
 					tokensFrequencyOneDocument.put(currentWord, freqOne);
@@ -111,13 +180,16 @@ public class TokenCreator
 				{
 					Integer freqOne = 1;
 					tokensFrequencyOneDocument.put(currentWord, freqOne);
-				}
+				}*/
 				
-				tokensFrequency.put(currentWord, frequency); //update frequency
+				//tokensFrequency.put(currentWord, frequency); //update frequency
+				
+				allTerms.put(currentWord, term);
+				
 				
 				
 
-				ArrayList<Integer> docIDs = tokensDocIDs.get(currentWord);  //EXISTS
+			/*	ArrayList<Integer> docIDs = tokensDocIDs.get(currentWord);  //EXISTS
 
 				//System.out.println(docIDs.get(docIDs.size() - 1) + "   " + docID);
 
@@ -130,7 +202,7 @@ public class TokenCreator
 					tokensDocIDs.put(currentWord, docIDs);//update docIDs otherwise don't change anything
 					
 					//allDocuments.put(docID, )
-				}
+				}*/
 			}
 
 			else // if there are no frequencies yet and no docIDs then create the needed values
@@ -144,35 +216,54 @@ public class TokenCreator
 				*/
 				
 				//DB
-				Term term = new Term(currentWord);				
+				//Term term = new Term(currentWord);				
 				//
 				
+				//CREATE TOTAL FREQUENCY, DOCID AND TF
 				Integer frequency = 1;
-				tokensFrequency.put(currentWord, frequency); 
-				tokensFrequencyOneDocument.put(currentWord, frequency);
-				//DB
-				term.setTotalFrequency(frequency);
-				//
 				
-				ArrayList<Integer> docIDs = new ArrayList<Integer>();	
-				docIDs.add(docID);
-				tokensDocIDs.put(currentWord, docIDs);
-				
-				//DB
-				ArrayList<Document> documentsIDs = new ArrayList<Document>();
+				ArrayList<Document> documents = new ArrayList<Document>();
 				Document document = new Document();
 				document.setDocID(docID);
-				documentsIDs.add(document);
-				document.setDf(frequency);
-				term.setDocuments(documentsIDs);
+				document.setTf(1);
+				documents.add(document);
 				
-				dbo.putAll(term);
-				dc.insert(dbo);	
+				Term term = new Term(currentWord);
+				term.setTerm(currentWord);
+				term.setTotalFrequency(frequency);
+				term.setDocuments(documents);
+				
+				allTerms.put(currentWord, term);
+				
+				
+	//			tokensFrequency.put(currentWord, frequency); 
+	//			tokensFrequencyOneDocument.put(currentWord, frequency);
+				//DB
+				//term.setTotalFrequency(frequency);
+				//
+				
+	//			ArrayList<Integer> docIDs = new ArrayList<Integer>();	
+	//			docIDs.add(docID);
+	//			tokensDocIDs.put(currentWord, docIDs);
+				
+				//DB
+			//	ArrayList<Document> documentsIDs = new ArrayList<Document>();
+			//	Document document = new Document();
+			//	document.setDocID(docID);
+			//	documentsIDs.add(document);
+			//	document.setTf(frequency);
+			//	term.setDocuments(documentsIDs);
+				
+				//dbo.append(currentWord, term);
+			//	dbo.putAll(term);
+			//	dc.insert(dbo);	
 				//
 			}
 		}
 		//System.out.println("\n\nPRINTING FREQUENCY: " + docID + ": " + tokensFrequencyOneDocument);
-		allDocuments.put(docID, tokensFrequencyOneDocument);
+		//allDocuments.put(docID, tokensFrequencyOneDocument);
+		
+		System.out.println(allTerms);
 		
 
 	}
