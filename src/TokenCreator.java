@@ -9,6 +9,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 
 import mongodb.MongoDb;
 import tf.idf.Document;
@@ -208,14 +209,28 @@ public class TokenCreator
 
 		}*/
 		
-		DBCursor cursor = dc.find();
+		/*DBCursor cursor = dc.find();
 		try {
 			while(cursor.hasNext()) {
 				System.out.println(cursor.next());
 			}
 		} finally {
 			cursor.close();
-		}
+		}*/
+		DBCollection term = db.getCollection("Term");
+		System.out.println(term.getCount());
+		BasicDBObject termQuery = new BasicDBObject();		
+		termQuery.put("Term", "the");
+		System.out.println(term.findOne(termQuery));
+		
+		Term termik = (Term) term.findOne(termQuery);
+	
+		
+	/*	BasicDBObject termQuery = new BasicDBObject();		
+		termQuery.put("Term", "the");
+		BasicDBObject frequencyQuery = new BasicDBObject();
+		frequencyQuery.append("$set", new BasicDBObject().append("Documents", ));
+		dc.update(termQuery, frequencyQuery);*/
 		
 		//System.out.println(numberOfDocuments);
 	}

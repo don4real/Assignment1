@@ -1,9 +1,11 @@
 package tf.idf;
 
+import java.io.Serializable;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.ReflectionDBObject;
 
-public class Query extends ReflectionDBObject {
+public class Query extends ReflectionDBObject  implements Serializable {
 	private int tf;
 	private int df;
 	private double idf;

@@ -1,11 +1,15 @@
 package tf.idf;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.ReflectionDBObject;
 
-public class Term extends ReflectionDBObject {
+public class Term extends ReflectionDBObject implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String term;
 	private int totalFrequency;
 	private Query query;
