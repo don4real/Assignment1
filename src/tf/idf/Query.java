@@ -31,8 +31,9 @@ public class Query extends ReflectionDBObject {
 		if (df == 0){
 			this.idf = 0.0;
 		}else{
-			this.idf = Math.log(n * df);
-		}		
+			
+			this.idf = Math.log10((double) n/df);
+		}
 		this.weightq = this.tf * this.idf;
 	}
 	public double getWeightq() {
@@ -42,4 +43,8 @@ public class Query extends ReflectionDBObject {
 	public void setWeightq(int weightq) {
 		this.weightq = weightq;
 	}	
+	@Override
+	public String toString() {
+		return "Query [tf=" + tf + ", df=" + df + ", idf=" + idf + ", weightq=" + weightq + "]";
+	}
 }

@@ -141,6 +141,15 @@ public class TokenCreator
 				}
 
 				term.setDocuments(documents);
+				
+				Query query = term.getQuery();
+				query.setDf(frequency);
+				query.setIdf(numberOfDocuments, frequency);		
+				
+				//System.out.println(frequency);
+				
+				term.setQuery(query);
+
 
 			}
 
@@ -155,11 +164,18 @@ public class TokenCreator
 				document.setDocID(docID);
 				document.setTf(1);
 				documents.add(document);
+				
+				Query query = new Query();
+				query.setDf(frequency);
+				query.setIdf(numberOfDocuments, frequency);
+				//System.out.println(query);
 
 				Term term = new Term(currentWord);
 				term.setTerm(currentWord);
 				term.setTotalFrequency(frequency);
 				term.setDocuments(documents);
+				
+				term.setQuery(query);
 
 				allTerms.put(currentWord, term);
 
@@ -175,8 +191,8 @@ public class TokenCreator
 	{
 		//System.out.println(allTerms);
 //dc.remove(dbo);
-		/*
-		BasicDBObject query = new BasicDBObject("Term", 1);
+		
+		/*BasicDBObject query = new BasicDBObject("Term", 1);
 		dc.ensureIndex(query, "Term", true);
 		
 		for(Map.Entry<String, Term> entry : allTerms.entrySet()) 
@@ -200,7 +216,8 @@ public class TokenCreator
 		} finally {
 			cursor.close();
 		}
-
+		
+		//System.out.println(numberOfDocuments);
 	}
 
 
