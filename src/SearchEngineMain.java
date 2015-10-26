@@ -20,18 +20,8 @@ public class SearchEngineMain {
 	private static Gui gui;
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		MongoDb mongodb = new MongoDb();
-		DB db = mongodb.getDb();
-		//initialize();	
-		DBCollection coll = db.getCollection("test");
-        DBObject record = new BasicDBObject();
-        List<HashMap<String,Integer>> persons= new ArrayList<HashMap<String,Integer>>();
-        persons.add(new HashMap<String,Integer>());
-        record.put("person", persons);
-        coll.save(record);
-        
-        coll = db.getCollection("test");
-        
+		
+		initialize();
         
 	}
 	public static void initialize(){
