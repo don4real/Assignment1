@@ -1,6 +1,10 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
+
+import javax.swing.JLabel;
 
 import tf.idf.DocumentRank;
 import tf.idf.Term;
@@ -136,4 +140,6 @@ public class QueryHandeler {
 	public void setDocumentNames(ArrayList<String> documentNames) {
 		this.documentNames = documentNames;
 	}
+	
+	
 }

@@ -2,19 +2,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.TreeMap;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-
-import mongodb.MongoDb;
 import tf.idf.Document;
 import tf.idf.Query;
 import tf.idf.Term;
@@ -24,15 +15,7 @@ public class TokenCreator
 	private static int docID;
 	private static int numberOfDocuments;	
 	private ArrayList<String> documentNames;
-
-
-	//EVERYTHING THAT WILL BE PUT IN MONGODB LATER
 	private static TreeMap<String, Term> allTerms = new TreeMap<String, Term>();
-
-	private static MongoDb mongodb = new MongoDb();
-	private static DB db = mongodb.getDb();
-	private static DBCollection dc = db.getCollection("Term");
-	private static BasicDBObject dbo = new BasicDBObject();
 	private static HashMap<String, ArrayList<Double>>  euclideanNormalizedTfValues;
 	public TokenCreator() {
 		super();
@@ -54,11 +37,9 @@ public class TokenCreator
 			finalMap = readFile(fullPath);	
 			
 		}
-	
-		//putInMongo(finalMap);
 
-		System.out.println(finalMap);
 		setEuclideanNormalizedTfValues(createEuclideanNormalizedTfValues(createTfValuesTable(finalMap)));
+		
 		return finalMap;
 
 	}
@@ -178,7 +159,6 @@ public class TokenCreator
 	public static TreeMap<String, Term> createPosting(ArrayList<String> file)
 	{
 		Map<String, Integer> tokensFrequencyOneDocument  = new TreeMap<String, Integer>();
-		//Integer frequencyOne = 0;
 
 		for(int i=0; i<file.size(); i++)
 		{
@@ -214,8 +194,7 @@ public class TokenCreator
 						addNewOne = false;
 
 						documents.set(y, document);
-					}			
-
+					}
 				}
 
 				if(addNewOne==true)
@@ -232,12 +211,7 @@ public class TokenCreator
 				Query query = term.getQuery();
 				query.setDf(documents.size());
 				query.setIdf(numberOfDocuments, documents.size());		
-				
-				//System.out.println(frequency);
-				
 				term.setQuery(query);
-
-
 			}
 
 			else // if there are no frequencies yet and no docIDs then create the needed values
@@ -255,7 +229,6 @@ public class TokenCreator
 				Query query = new Query();
 				query.setDf(documents.size());
 				query.setIdf(numberOfDocuments, documents.size());
-				//System.out.println(query);
 
 				Term term = new Term(currentWord);
 				term.setTerm(currentWord);
@@ -265,62 +238,12 @@ public class TokenCreator
 				term.setQuery(query);
 
 				allTerms.put(currentWord, term);
-
 			}
 		}
 
 		return allTerms;
-
-
 	}
-
-	public static void putInMongo(TreeMap<String, Term> allTerms)
-	{
-		//System.out.println(allTerms);
-//dc.remove(dbo);
-		
-		/*BasicDBObject query = new BasicDBObject("Term", 1);
-		dc.ensureIndex(query, "Term", true);
-		
-		for(Map.Entry<String, Term> entry : allTerms.entrySet()) 
-		{
-			String key = entry.getKey();
-			Term value = entry.getValue();
-			
-			//System.out.println(key);
-			
-			//dbo.put(key, value);
-			dbo.putAll(value);
-			dc.insert(dbo);	
-
-		}*/
-		
-		/*DBCursor cursor = dc.find();
-		try {
-			while(cursor.hasNext()) {
-				System.out.println(cursor.next());
-			}
-		} finally {
-			cursor.close();
-		}*/
-		DBCollection term = db.getCollection("Term");
-		System.out.println(term.getCount());
-		BasicDBObject termQuery = new BasicDBObject();		
-		termQuery.put("Term", "the");
-		System.out.println(term.findOne(termQuery));
-		
-		Term termik = (Term) term.findOne(termQuery);
 	
-		
-	/*	BasicDBObject termQuery = new BasicDBObject();		
-		termQuery.put("Term", "the");
-		BasicDBObject frequencyQuery = new BasicDBObject();
-		frequencyQuery.append("$set", new BasicDBObject().append("Documents", ));
-		dc.update(termQuery, frequencyQuery);*/
-		
-		//System.out.println(numberOfDocuments);
-	}
-
 	public HashMap<String, ArrayList<Double>> getEuclideanNormalizedTfValues() {
 		return euclideanNormalizedTfValues;
 	}

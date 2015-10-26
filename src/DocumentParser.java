@@ -6,13 +6,19 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
-public class FileReader_VersionThree 
+public class DocumentParser 
 {
-	static TreeMap<String, Integer> tokensFrequency = new TreeMap<String, Integer>(); //tokens and their frequencies
-	static TreeMap<String, ArrayList<Integer>> tokensDocIDs = new TreeMap<String, ArrayList<Integer>>(); //tokens and their docIDs
-	static int docID;
+	static Map<String, Integer> tokensFrequency = new TreeMap<String, Integer>(); //tokens and their frequencies
+	static Map<String, ArrayList<Integer>> tokensDocIDs = new TreeMap<String, ArrayList<Integer>>(); //tokens and their docIDs
 	
-	public FileReader_VersionThree() {
+	
+	static TreeMap<Integer, Map<String, Integer>> allDocuments = new TreeMap<Integer, Map<String, Integer>>();
+	
+	static int docID;
+	static int numberOfDocuments;
+	//string
+	
+	public DocumentParser() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -21,16 +27,16 @@ public class FileReader_VersionThree
 	{
 		String fullPath;
 		ArrayList<String> file = new ArrayList<String>();
-
+		numberOfDocuments = documentNames.size();
+		
 		for(docID=0; docID<documentNames.size(); docID++)
-		{
+		{			
 			String fileName = documentNames.get(docID);
 			fullPath  = path + fileName;
 
-			readFile(fullPath);
+			readFile(fullPath);				
 		}
 	}
-
 
 	public static void readFile(String fullPath)
 	{
@@ -65,11 +71,11 @@ public class FileReader_VersionThree
 
 	public static void createPosting(ArrayList<String> file)
 	{
-		
+		Map<String, Integer> tokensFrequencyOneDocument  = new TreeMap<String, Integer>();
+		//Integer frequencyOne = 0;
 		
 		for(int i=0; i<file.size(); i++)
 		{
-			
 			String currentWord = LinguisticModule.fixToken(file.get(i));
 			
 			/*
@@ -89,13 +95,28 @@ public class FileReader_VersionThree
 			stemmer.stem();
 			currentWord = stemmer.toString();	
 			
-			*/
+			*/	
 
-			if (tokensFrequency.get(currentWord) != null) //if the token exists then increase frequency and perhaps add a new docID
+			if ((tokensFrequency.get(currentWord) != null)) //if the token exists then increase frequency and perhaps add a new docID
 			{
 				Integer frequency = tokensFrequency.get(currentWord);	//EXISTS	//gets empty every time accessed
-				frequency++;					
+				frequency++;			
+				
+				if(tokensFrequencyOneDocument.get(currentWord)!=null)
+				{
+					int freqOne = tokensFrequencyOneDocument.get(currentWord) + 1;
+					tokensFrequencyOneDocument.put(currentWord, freqOne);
+				}
+				
+				else
+				{
+					Integer freqOne = 1;
+					tokensFrequencyOneDocument.put(currentWord, freqOne);
+				}
+				
 				tokensFrequency.put(currentWord, frequency); //update frequency
+				
+				
 
 				ArrayList<Integer> docIDs = tokensDocIDs.get(currentWord);  //EXISTS
 
@@ -108,6 +129,8 @@ public class FileReader_VersionThree
 					//System.out.println(docIDs);
 
 					tokensDocIDs.put(currentWord, docIDs);//update docIDs otherwise don't change anything
+					
+					//allDocuments.put(docID, )
 				}
 			}
 
@@ -115,12 +138,15 @@ public class FileReader_VersionThree
 			{		
 				Integer frequency = 1;
 				tokensFrequency.put(currentWord, frequency); 
+				tokensFrequencyOneDocument.put(currentWord, frequency);
 
 				ArrayList<Integer> docIDs = new ArrayList<Integer>();										
 				docIDs.add(docID);
 				tokensDocIDs.put(currentWord, docIDs);
 			}
 		}
+		//System.out.println("\n\nPRINTING FREQUENCY: " + docID + ": " + tokensFrequencyOneDocument);
+		allDocuments.put(docID, tokensFrequencyOneDocument);
 
 	}
 
@@ -130,8 +156,8 @@ public class FileReader_VersionThree
 	}
 
 
-	public static void setTokensFrequency(TreeMap<String, Integer> tokensFrequency) {
-		FileReader_VersionThree.tokensFrequency = tokensFrequency;
+	public static void setTokensFrequency(Map<String, Integer> tokensFrequency) {
+		DocumentParser.tokensFrequency = tokensFrequency;
 	}
 
 
@@ -140,8 +166,8 @@ public class FileReader_VersionThree
 	}
 
 
-	public static void setTokensDocIDs(TreeMap<String, ArrayList<Integer>> tokensDocIDs) {
-		FileReader_VersionThree.tokensDocIDs = tokensDocIDs;
+	public static void setTokensDocIDs(Map<String, ArrayList<Integer>> tokensDocIDs) {
+		DocumentParser.tokensDocIDs = tokensDocIDs;
 	}
 
 
@@ -151,7 +177,19 @@ public class FileReader_VersionThree
 
 
 	public static void setDocID(int docID) {
-		FileReader_VersionThree.docID = docID;
+		DocumentParser.docID = docID;
+	}
+	public int getNumberOfDocuments(){
+		return numberOfDocuments;
+	}
+
+	public static TreeMap<Integer, Map<String, Integer>> getAllDocuments() {
+		return allDocuments;
+	}
+
+	public static void setAllDocuments(
+			TreeMap<Integer, Map<String, Integer>> allDocuments) {
+		DocumentParser.allDocuments = allDocuments;
 	}
 
 }
