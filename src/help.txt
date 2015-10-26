@@ -1,0 +1,6 @@
+Search Engine Readme
+
+[1] Place text files in ../src/documents/
+[2] Run application. Note: Application may become irresponsive while indexing depending on the size and amount of docs. Please be patient.
+[3] When the Graphical user interface loads, you are able to search by typing the query in the search field and click the search button below to search
+[4] The documents will be displayed below ranked accordingly.
