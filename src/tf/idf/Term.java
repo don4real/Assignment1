@@ -1,11 +1,8 @@
 package tf.idf;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.ReflectionDBObject;
 
-public class Term extends ReflectionDBObject implements Serializable {
+public class Term {
 	/**
 	 * 
 	 */

@@ -1,11 +1,7 @@
 package tf.idf;
 
-import java.io.Serializable;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.ReflectionDBObject;
-
-public class Query extends ReflectionDBObject  implements Serializable {
+public class Query {
 	private int tf;
 	private int df;
 	private double idf;

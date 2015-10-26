@@ -1,11 +1,7 @@
 package tf.idf;
 
-import java.io.Serializable;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.ReflectionDBObject;
-
-public class Document extends ReflectionDBObject  implements Serializable {
+public class Document {
 	private int tf;
 	private int wf;
 	private int weightq;
