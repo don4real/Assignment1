@@ -1,8 +1,11 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.TreeMap;
 
 import com.mongodb.BasicDBObject;
@@ -18,45 +21,128 @@ import tf.idf.Term;
 
 public class TokenCreator 
 {
-	static int docID;
-	static int numberOfDocuments;
+	private static int docID;
+	private static int numberOfDocuments;	
+	private ArrayList<String> documentNames;
+
 
 	//EVERYTHING THAT WILL BE PUT IN MONGODB LATER
-	static TreeMap<String, Term> allTerms = new TreeMap<String, Term>();
+	private static TreeMap<String, Term> allTerms = new TreeMap<String, Term>();
 
-	static MongoDb mongodb = new MongoDb();
-	static DB db = mongodb.getDb();
-	static DBCollection dc = db.getCollection("Term");
-	static BasicDBObject dbo = new BasicDBObject();
-
+	private static MongoDb mongodb = new MongoDb();
+	private static DB db = mongodb.getDb();
+	private static DBCollection dc = db.getCollection("Term");
+	private static BasicDBObject dbo = new BasicDBObject();
+	private static HashMap<String, ArrayList<Double>>  euclideanNormalizedTfValues;
 	public TokenCreator() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public static void tokenize(String path, ArrayList<String> documentNames)
+	public TreeMap<String, Term> tokenize(String path, ArrayList<String> documentNames)
 	{
 		String fullPath;
 		ArrayList<String> file = new ArrayList<String>();
 		numberOfDocuments = documentNames.size();
-
+		this.setDocumentNames(documentNames);
 		TreeMap<String, Term> finalMap = null;
 
 		for(docID=0; docID<documentNames.size(); docID++)
 		{			
 			String fileName = documentNames.get(docID);
 			fullPath  = path + fileName;
-
-
-			finalMap = readFile(fullPath);				
+			finalMap = readFile(fullPath);	
+			
 		}
-		
-		putInMongo(finalMap);
+	
+		//putInMongo(finalMap);
 
-		//System.out.println(finalMap);
+		System.out.println(finalMap);
+		setEuclideanNormalizedTfValues(createEuclideanNormalizedTfValues(createTfValuesTable(finalMap)));
+		return finalMap;
 
 	}
+	public static HashMap<String, ArrayList<Double>> createEuclideanNormalizedTfValues(HashMap<String, ArrayList<Double>> tfValuesTable){
+		
+		HashMap<String, ArrayList<Double>> euclideanNormalizedTfValues = tfValuesTable;
+		ArrayList<Double> sqrSumOfDocs = createsqrSumOfDocs(tfValuesTable);
+				
+		String[] tfValuesTableKeys = euclideanNormalizedTfValues.keySet().toArray(new String[0]);
+		for(int i=0;i<tfValuesTableKeys.length;i++){
+			 ArrayList<Double> values = euclideanNormalizedTfValues.get(tfValuesTableKeys[i]);
+			 for(int j=0;j<values.size();j++){
+				 double entf =  values.get(j) / Math.sqrt(sqrSumOfDocs.get(j)); //System.out.println(x + " = " + values.get(j) +" / Sqrt:" +  sqrSumOfDocs.get(j) );
+				 values.set(j, entf);
+				 euclideanNormalizedTfValues.put(tfValuesTableKeys[i], values);
+				 
+			 }
+		}
+		
+		System.out.println("\n\n***\n" +"Euclidean Normalized Tf Values Table: \n" + euclideanNormalizedTfValues + "\n***\n\n"); 
+		return euclideanNormalizedTfValues;
+	}
 
+	private static ArrayList<Double> createsqrSumOfDocs(HashMap<String, ArrayList<Double>> tfValuesTable) {
+		// TODO Auto-generated method stub
+		String[] tfValuesTableKeys = tfValuesTable.keySet().toArray(new String[0]);
+		ArrayList<Double> sqrSumOfDocs = createEmptyValuesForTfTable();
+		 
+		
+		for(int i=0;i<tfValuesTableKeys.length;i++){
+			 ArrayList<Double> values = tfValuesTable.get(tfValuesTableKeys[i]);
+			 
+			 for(int j=0;j<values.size();j++){
+				 Double temp = sqrSumOfDocs.get(j);
+				 sqrSumOfDocs.set(j, temp + Math.pow(values.get(j),2) );
+			 }
+		}
+		for(int i=0;i<tfValuesTableKeys.length;i++){
+			 ArrayList<Double> values = tfValuesTable.get(tfValuesTableKeys[i]);
+			 
+		}
+		
+		System.out.println("sqrSumOfDocs: " + sqrSumOfDocs);
+		
+		return sqrSumOfDocs;
+	}
+
+	private static HashMap<String, ArrayList<Double>> createTfValuesTable(TreeMap<String, Term> finalMap) {
+		// TODO Auto-generated method stub
+		HashMap<String, ArrayList<Double>> tfValuesTable = new HashMap<String,ArrayList<Double>>();
+		String[] finalMapKeys = finalMap.keySet().toArray(new String[0]);
+		for(int i=0;i<finalMapKeys.length;i++){
+			Term term = finalMap.get(finalMapKeys[i]);
+			ArrayList<Document> documents = term.getDocuments();
+			
+			//***
+			ArrayList<Double> values = null;
+			ArrayList<Double> emptyValues = createEmptyValuesForTfTable();
+			//***
+			//System.out.println("Documents.Size: "  + documents);
+			
+			//get the documents and place them in the order of docID in value
+			for (int j=0;j<documents.size();j++){
+				values = emptyValues;
+				Document document = documents.get(j);
+				values.set(document.getDocID(), (double) document.getTf());
+			}
+			
+				
+			tfValuesTable.put(term.getTerm(), values);
+			
+		}
+		System.out.println("\n\n***\n" +"Tf Values Table: \n" +tfValuesTable + "\n***\n\n");
+		return tfValuesTable;
+	}
+
+	public static ArrayList<Double> createEmptyValuesForTfTable() {
+		// TODO Auto-generated method stub
+		ArrayList<Double> emptyValues = new ArrayList<Double>();
+		for (int h=0;h<numberOfDocuments;h++){
+			emptyValues.add(0.0);
+		}
+		return emptyValues;
+	}
 
 	public static TreeMap<String, Term> readFile(String fullPath)
 	{
@@ -144,8 +230,8 @@ public class TokenCreator
 				term.setDocuments(documents);
 				
 				Query query = term.getQuery();
-				query.setDf(frequency);
-				query.setIdf(numberOfDocuments, frequency);		
+				query.setDf(documents.size());
+				query.setIdf(numberOfDocuments, documents.size());		
 				
 				//System.out.println(frequency);
 				
@@ -167,8 +253,8 @@ public class TokenCreator
 				documents.add(document);
 				
 				Query query = new Query();
-				query.setDf(frequency);
-				query.setIdf(numberOfDocuments, frequency);
+				query.setDf(documents.size());
+				query.setIdf(numberOfDocuments, documents.size());
 				//System.out.println(query);
 
 				Term term = new Term(currentWord);
@@ -235,5 +321,25 @@ public class TokenCreator
 		//System.out.println(numberOfDocuments);
 	}
 
+	public HashMap<String, ArrayList<Double>> getEuclideanNormalizedTfValues() {
+		return euclideanNormalizedTfValues;
+	}
+
+	public static void setEuclideanNormalizedTfValues(
+			HashMap<String, ArrayList<Double>> euclideanNormalizedTfValues) {
+		TokenCreator.euclideanNormalizedTfValues = euclideanNormalizedTfValues;
+	}
+	public int getNumberOfDocuments(){
+		return numberOfDocuments;
+	}
+
+	public ArrayList<String> getDocumentNames() {
+		return documentNames;
+	}
+
+	public void setDocumentNames(ArrayList<String> documentNames) {
+		this.documentNames = documentNames;
+	}
+	
 
 }

@@ -70,9 +70,8 @@ public class Term extends ReflectionDBObject implements Serializable {
 	
 	@Override
 	public String toString() {	
-		return "Term [term=" + term + ", TotalFrequency " + totalFrequency + ", Documents " + documents +"]\n\n";
-
-	}
+		return " totalfeq: " + totalFrequency + " -- " + query +"\nDocuments: " + documents +"]\n\n";
+}
 
 
 }

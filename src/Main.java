@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+ import java.util.ArrayList;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -30,9 +30,9 @@ public class Main {
 		//UNCOMMENT
 		BasicDBObject dbo = new BasicDBObject();
 		////<--	
-			TokenCreator fr2 = new TokenCreator();
+			TokenCreator tokenCreator = new TokenCreator();
 		
-			fr2.tokenize(path, documentNames);
+			tokenCreator.tokenize(path, documentNames);
 
 
 		///// UNCOMMENT TO CREATE THE INDEX ONCE
